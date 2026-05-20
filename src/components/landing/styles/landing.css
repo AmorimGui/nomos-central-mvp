@@ -1,0 +1,90 @@
+/**
+ * Landing-only design system.
+ *
+ * Tokens are scoped to .theme-brand — outside the wrapper they are
+ * undefined and have zero effect on the rest of the app. Borders
+ * are intentionally NOT tokenized: use Tailwind's built-in
+ * `border-white/[0.08]` (default) and `border-white/[0.16]` (hover).
+ */
+
+/* Self-hosted Geist (latin subset only — app is pt-BR) */
+@import "@fontsource/geist-sans/latin-400.css";
+@import "@fontsource/geist-sans/latin-500.css";
+@import "@fontsource/geist-sans/latin-600.css";
+@import "@fontsource/geist-sans/latin-700.css";
+@import "@fontsource/geist-mono/latin-400.css";
+
+.theme-brand {
+  /* RGB triplets — work with Tailwind's rgb(var(--x) / <alpha-value>) */
+  --brand-bg: 8 9 10;
+  --brand-bg-secondary: 17 18 20;
+  --brand-bg-tertiary: 26 27 30;
+  --brand-text-primary: 250 250 250;
+  --brand-text-secondary: 161 161 170;
+  --brand-text-tertiary: 113 113 122;
+  --brand-accent: 16 185 129;
+
+  background-color: rgb(var(--brand-bg));
+  color: rgb(var(--brand-text-primary));
+  font-family: "Geist", "Inter", system-ui, sans-serif;
+  /* Smooth transition reserved for the future light/dark toggle */
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+/* Typography hierarchy — overrides index.css globals (h1{ @apply text-xl }, etc.)
+ * by virtue of higher specificity (0,1,1 > 0,0,1). Order-independent. */
+.theme-brand h1 {
+  font-size: clamp(2.75rem, 6vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.theme-brand h2 {
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.theme-brand h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.theme-brand h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Optional utilities matching the design system's body/small/caption tiers */
+.theme-brand .body-large {
+  font-size: clamp(1.125rem, 2vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgb(var(--brand-text-secondary));
+}
+.theme-brand .small {
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.theme-brand .caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Focus indicators for in-landing anchors (BrandButton handles its own ring). */
+.theme-brand a:focus-visible {
+  outline: 2px solid rgb(var(--brand-accent));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* prefers-reduced-motion respects the 300ms theme transition */
+@media (prefers-reduced-motion: reduce) {
+  .theme-brand {
+    transition: none;
+  }
+}

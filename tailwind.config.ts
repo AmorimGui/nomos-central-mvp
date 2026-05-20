@@ -57,6 +57,23 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Landing-only tokens. Defined as CSS vars inside .theme-brand
+        // (see src/components/landing/styles/landing.css). Outside that
+        // wrapper the vars are undefined and these utilities resolve to
+        // nothing — safe to coexist with the app's grayscale palette.
+        brand: {
+          bg: "rgb(var(--brand-bg) / <alpha-value>)",
+          "bg-secondary": "rgb(var(--brand-bg-secondary) / <alpha-value>)",
+          "bg-tertiary": "rgb(var(--brand-bg-tertiary) / <alpha-value>)",
+          "text-primary": "rgb(var(--brand-text-primary) / <alpha-value>)",
+          "text-secondary": "rgb(var(--brand-text-secondary) / <alpha-value>)",
+          "text-tertiary": "rgb(var(--brand-text-tertiary) / <alpha-value>)",
+          accent: "rgb(var(--brand-accent) / <alpha-value>)",
+        },
+      },
+      fontFamily: {
+        geist: ["Geist", "Inter", "system-ui", "sans-serif"],
+        "geist-mono": ["Geist Mono", "ui-monospace", "monospace"],
       },
       borderRadius: {
         lg: "var(--radius)",

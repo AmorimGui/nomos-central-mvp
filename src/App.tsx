@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AppHeader } from "@/components/AppHeader";
@@ -15,6 +15,8 @@ import { FocusSidebar } from "@/components/canva/FocusSidebar";
 import { FocusStatusBar } from "@/components/focus/FocusStatusBar";
 import { ExternalToolsTabs } from "@/components/tools/ExternalToolsTabs";
 import { ExternalToolView } from "@/components/tools/ExternalToolView";
+import { LandingLayout } from "@/components/landing/LandingLayout";
+import LandingPage from "./pages/LandingPage";
 import Index from "./pages/Index";
 import Hoje from "./pages/Hoje";
 import EmBreve from "./pages/EmBreve";
@@ -24,7 +26,6 @@ import LembretesRapidos from "./pages/LembretesRapidos";
 import Caderno from "./pages/Caderno";
 import NotebookView from "./pages/NotebookView";
 import CadernoDevTest from "./pages/CadernoDevTest";
-
 import Flashcards from "./pages/Flashcards";
 import ModoFoco from "./pages/ModoFoco";
 import FocusSettingsPanel from "./components/configuracoes/FocusSettingsPanel";
@@ -38,14 +39,14 @@ const queryClient = new QueryClient();
 
 function MainContent() {
   const { openTabs, activeTabId, closeTab, closeAllTabs, setActiveTab } = useExternalTools();
-  
+
   const activeTool = openTabs.find(t => t.id === activeTabId);
 
   return (
     <div className="flex-1 flex flex-col w-full">
       <FocusStatusBar />
       <AppHeader />
-      
+
       {/* External Tools Tabs Bar */}
       <ExternalToolsTabs
         openTabs={openTabs}
@@ -54,37 +55,13 @@ function MainContent() {
         onCloseTab={closeTab}
         onCloseAllTabs={closeAllTabs}
       />
-      
+
       {/* Main Content Area */}
       {activeTool ? (
         <ExternalToolView tool={activeTool} />
-      
       ) : (
         <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/hoje" element={<Hoje />} />
-            <Route path="/em-breve" element={<EmBreve />} />
-            <Route path="/resumos" element={<Resumos />} />
-            <Route path="/concluido" element={<Concluido />} />
-            <Route path="/lembretes-rapidos" element={<LembretesRapidos />} />
-            <Route path="/caderno" element={<Caderno />} />
-            <Route path="/caderno/:notebookId" element={<NotebookView />} />
-            
-            <Route path="/caderno-dev-test" element={<CadernoDevTest />} />
-            
-            <Route path="/flashcards" element={<Flashcards />} />
-            <Route path="/modo-foco" element={<ModoFoco />} />
-            <Route path="/tarefa/:id" element={<TaskDetail />} />
-            <Route path="/tarefa/:id" element={<TaskDetail />} />
-            <Route path="/projetos/primeiros-passos" element={<PrimeirosPassos />} />
-            <Route path="/configuracoes" element={<Configuracoes />}>
-              <Route path="modo-foco" element={<FocusSettingsPanel />} />
-              <Route path="integracoes" element={<ConfiguracoesIntegracoes />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Outlet />
         </main>
       )}
     </div>
@@ -93,13 +70,23 @@ function MainContent() {
 
 function AppLayout() {
   return (
-    <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full">
-        <AppSidebar />
-        <MainContent />
-        <FocusSidebar />
-      </div>
-    </SidebarProvider>
+    <AuthProvider>
+      <HiddenTabsProvider>
+        <CanvaSessionProvider>
+          <FocusModeProvider>
+            <ExternalToolsProvider>
+              <SidebarProvider defaultOpen={true}>
+                <div className="flex min-h-screen w-full">
+                  <AppSidebar />
+                  <MainContent />
+                  <FocusSidebar />
+                </div>
+              </SidebarProvider>
+            </ExternalToolsProvider>
+          </FocusModeProvider>
+        </CanvaSessionProvider>
+      </HiddenTabsProvider>
+    </AuthProvider>
   );
 }
 
@@ -114,17 +101,35 @@ const App = () => (
         v{VERSION}
       </div>
       <BrowserRouter>
-        <AuthProvider>
-          <HiddenTabsProvider>
-            <CanvaSessionProvider>
-              <FocusModeProvider>
-                <ExternalToolsProvider>
-                  <AppLayout />
-                </ExternalToolsProvider>
-              </FocusModeProvider>
-            </CanvaSessionProvider>
-          </HiddenTabsProvider>
-        </AuthProvider>
+        <Routes>
+          {/* Landing pública (sem AppSidebar/Header/etc.) */}
+          <Route element={<LandingLayout />}>
+            <Route path="/" element={<LandingPage />} />
+          </Route>
+
+          {/* App autenticado (todos os contexts + sidebar + header) */}
+          <Route element={<AppLayout />}>
+            <Route path="/app" element={<Index />} />
+            <Route path="/hoje" element={<Hoje />} />
+            <Route path="/em-breve" element={<EmBreve />} />
+            <Route path="/resumos" element={<Resumos />} />
+            <Route path="/concluido" element={<Concluido />} />
+            <Route path="/lembretes-rapidos" element={<LembretesRapidos />} />
+            <Route path="/caderno" element={<Caderno />} />
+            <Route path="/caderno/:notebookId" element={<NotebookView />} />
+            <Route path="/caderno-dev-test" element={<CadernoDevTest />} />
+            <Route path="/flashcards" element={<Flashcards />} />
+            <Route path="/modo-foco" element={<ModoFoco />} />
+            <Route path="/tarefa/:id" element={<TaskDetail />} />
+            <Route path="/projetos/primeiros-passos" element={<PrimeirosPassos />} />
+            <Route path="/configuracoes" element={<Configuracoes />}>
+              <Route path="modo-foco" element={<FocusSettingsPanel />} />
+              <Route path="integracoes" element={<ConfiguracoesIntegracoes />} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
