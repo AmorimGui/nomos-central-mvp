@@ -1,4 +1,6 @@
+import type { MouseEvent } from "react";
 import { Link } from "react-router-dom";
+import { smoothScrollTo } from "./utils/scroll";
 
 const navLinks = [
   { href: "#funcionalidades", label: "Funcionalidades" },
@@ -7,6 +9,11 @@ const navLinks = [
 ];
 
 export function Footer() {
+  const handleAnchorClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    smoothScrollTo(href.replace("#", ""));
+  };
+
   return (
     <footer className="border-t border-white/[0.08] py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-24 flex flex-col gap-8 md:flex-row md:items-start md:justify-between md:gap-12">
@@ -32,6 +39,7 @@ export function Footer() {
               <a
                 key={link.href}
                 href={link.href}
+                onClick={(e) => handleAnchorClick(e, link.href)}
                 className="text-sm text-brand-text-secondary hover:text-brand-text-primary transition-colors"
               >
                 {link.label}

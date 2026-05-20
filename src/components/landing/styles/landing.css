@@ -75,6 +75,13 @@
   letter-spacing: 0.08em;
 }
 
+/* Focus indicators for in-landing anchors (BrandButton handles its own ring). */
+.theme-brand a:focus-visible {
+  outline: 2px solid rgb(var(--brand-accent));
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 /* prefers-reduced-motion respects the 300ms theme transition */
 @media (prefers-reduced-motion: reduce) {
   .theme-brand {

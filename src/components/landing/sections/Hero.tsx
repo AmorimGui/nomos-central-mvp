@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Section } from "../ui/Section";
 import { BrandButton } from "../ui/BrandButton";
+import { smoothScrollTo } from "../utils/scroll";
 
 const container = {
   hidden: {},
@@ -30,9 +31,7 @@ interface HeroProps {
 }
 
 export function Hero({ onCTAClick }: HeroProps) {
-  const scrollToHowItWorks = () => {
-    document.getElementById("como-funciona")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const scrollToHowItWorks = () => smoothScrollTo("como-funciona");
 
   return (
     <Section size="hero" id="hero">

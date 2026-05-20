@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Section } from "../ui/Section";
+import { MMotif } from "../ui/MMotif";
 
 const container = {
   hidden: {},
@@ -17,9 +18,14 @@ const fadeUp = {
 
 export function ForWho() {
   return (
-    <Section id="para-quem">
+    <Section
+      id="para-quem"
+      backdrop={
+        <MMotif className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] md:w-[700px] md:h-[700px] text-brand-text-primary opacity-[0.04] -z-10" />
+      }
+    >
       <motion.div
-        className="mx-auto max-w-4xl text-center"
+        className="relative mx-auto max-w-4xl text-center"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.3 }}
