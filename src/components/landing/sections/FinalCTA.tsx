@@ -16,7 +16,11 @@ const fadeUp = {
   },
 };
 
-export function FinalCTA() {
+interface FinalCTAProps {
+  onCTAClick?: () => void;
+}
+
+export function FinalCTA({ onCTAClick }: FinalCTAProps) {
   return (
     <Section
       id="cta"
@@ -46,7 +50,7 @@ export function FinalCTA() {
         </motion.h2>
 
         <motion.div variants={fadeUp}>
-          <BrandButton variant="primary" size="lg">
+          <BrandButton variant="primary" size="lg" onClick={onCTAClick}>
             Garantir acesso antecipado
           </BrandButton>
         </motion.div>

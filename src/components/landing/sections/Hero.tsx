@@ -25,7 +25,11 @@ const mockTasks: Array<{ label: string; time: string; accent?: boolean }> = [
   { label: "Entregar TCC — capítulo 2", time: "18:00" },
 ];
 
-export function Hero() {
+interface HeroProps {
+  onCTAClick?: () => void;
+}
+
+export function Hero({ onCTAClick }: HeroProps) {
   const scrollToHowItWorks = () => {
     document.getElementById("como-funciona")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -59,7 +63,7 @@ export function Hero() {
             variants={item}
             className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2"
           >
-            <BrandButton variant="primary" size="lg">
+            <BrandButton variant="primary" size="lg" onClick={onCTAClick}>
               Entrar na lista de espera
             </BrandButton>
             <BrandButton variant="secondary" size="lg" onClick={scrollToHowItWorks}>
